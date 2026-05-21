@@ -1,0 +1,61 @@
+/* ============================================================
+   ARUPOS · Sistema de Control de Inventarios
+   variables.css — Design tokens y estilos base
+   ============================================================ */
+
+:root {
+  /* Fondos */
+  --bg-deep:            #0a0c0f;
+  --bg-panel:           #111318;
+  --bg-item:            #171a21;
+  --bg-hover:           #1e2230;
+  --bg-active:          #1b2340;
+
+  /* Acentos */
+  --accent:             #3b82f6;
+  --accent-glow:        rgba(59, 130, 246, .25);
+  --accent2:            #06b6d4;
+
+  /* Bordes */
+  --border:             rgba(255, 255, 255, .06);
+  --border-active:      rgba(59, 130, 246, .4);
+
+  /* Tipografía */
+  --text-primary:       #e8eaf0;
+  --text-secondary:     #8892a4;
+  --text-muted:         #4a5568;
+
+  /* Estados semánticos */
+  --color-ok:           #10b981;
+  --color-warn:         #f59e0b;
+  --color-error:        #ef4444;
+  --color-info:         #3b82f6;
+
+  /* Dimensiones */
+  --sidebar-w:          280px;
+  --sidebar-collapsed:  64px;
+  --topbar-h:           56px;
+  --radius:             6px;
+  --transition:         .22s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ── Reset base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar global ── */
+::-webkit-scrollbar         { width: 4px; height: 4px; }
+::-webkit-scrollbar-track   { background: transparent; }
+::-webkit-scrollbar-thumb   { background: var(--bg-hover); border-radius: 2px; }

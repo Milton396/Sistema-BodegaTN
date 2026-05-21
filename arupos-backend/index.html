@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARUPOS · Sistema de Control de Inventarios</title>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Estilos (orden importante) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════════ -->
+<header class="topbar">
+  <button class="topbar-toggle" id="sidebarToggle" aria-label="Abrir/cerrar menú">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6"  x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <div class="topbar-logo">ARUPOS <span>·</span> INVENTARIOS</div>
+
+  <nav class="topbar-breadcrumb" aria-label="Ruta actual">
+    <span id="bcSection">Inventarios</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-active" id="bcPage">Inventario Total</span>
+  </nav>
+
+  <div class="topbar-user" title="Perfil de usuario">AD</div>
+</header>
+
+<div class="layout">
+
+  <!-- Overlay móvil -->
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <!-- ════════════════════════════════════════════
+       SIDEBAR — Menú acordeón lateral
+  ════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar" aria-label="Menú principal">
+
+    <!-- ── INVENTARIOS ── -->
+    <div class="nav-group">
+      <div class="nav-group-label">Inventarios</div>
+
+      <div class="nav-item has-sub" data-tooltip="Inventarios"
+           onclick="toggleSub(this,'sub-inventarios')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </span>
+        <span class="nav-label">Inventarios</span>
+        <span class="nav-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sub-menu" id="sub-inventarios">
+        <div class="sub-item active" onclick="setActive(this,'Inventarios','Inventario Total')">
+          <span class="sub-dot"></span>Inventario Total
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Inventarios','Por Categoría (A-B-C-S)')">
+          <span class="sub-dot"></span>Por Categoría (A-B-C-S)
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Inventarios','Por Bodegas')">
+          <span class="sub-dot"></span>Por Bodegas
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Inventarios','Historial de Informes')">
+          <span class="sub-dot"></span>Historial de Informes
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Inventarios','Dashboard (Toma Actual)')">
+          <span class="sub-dot"></span>Dashboard (Toma Actual)
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Inventarios','Resumen por Mes/Ciudad')">
+          <span class="sub-dot"></span>Resumen por Mes/Ciudad
+        </div>
+      </div>
+
+      <div class="nav-item has-sub" data-tooltip="Parámetros"
+           onclick="toggleSub(this,'sub-params')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2M17.66 17.66l-1.41-1.41M6.34 17.66l1.41-1.41"/></svg>
+        </span>
+        <span class="nav-label">Parámetros de Inventario</span>
+        <span class="nav-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sub-menu" id="sub-params">
+        <div class="sub-item" onclick="setActive(this,'Parámetros','Inventario con Serie')">
+          <span class="sub-dot"></span>Inventario con Serie
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Parámetros','Inventario sin Serie')">
+          <span class="sub-dot"></span>Inventario sin Serie
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONSULTA DE STOCK ── -->
+    <div class="nav-group">
+      <div class="nav-group-label">Consulta de Stock</div>
+
+      <div class="nav-item has-sub" data-tooltip="Consulta Stock"
+           onclick="toggleSub(this,'sub-stock')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <span class="nav-label">Consulta de Stock</span>
+        <span class="nav-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sub-menu" id="sub-stock">
+        <div class="sub-item" onclick="setActive(this,'Consulta de Stock','Consulta Global de Existencias')">
+          <span class="sub-dot"></span>Consulta Global de Existencias
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Consulta de Stock','Consulta por Modelo')">
+          <span class="sub-dot"></span>Consulta por Modelo
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Consulta de Stock','Reserva de Equipo')">
+          <span class="sub-dot"></span>Reserva de Equipo
+        </div>
+      </div>
+
+      <div class="nav-item has-sub" data-tooltip="Distribución"
+           onclick="toggleSub(this,'sub-dist')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </span>
+        <span class="nav-label">Distribución de Equipos</span>
+        <span class="nav-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sub-menu" id="sub-dist">
+        <div class="sub-item" onclick="setActive(this,'Distribución','Solicitar Distribución')">
+          <span class="sub-dot"></span>Solicitar Distribución
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Distribución','Historial Distribuciones')">
+          <span class="sub-dot"></span>Historial Distribuciones
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REPORTERÍA ── -->
+    <div class="nav-group">
+      <div class="nav-group-label">Reportería</div>
+
+      <div class="nav-item has-sub" data-tooltip="Reportes"
+           onclick="toggleSub(this,'sub-rep')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </span>
+        <span class="nav-label">Reportes de Inventarios</span>
+        <span class="nav-badge">4</span>
+        <span class="nav-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sub-menu" id="sub-rep">
+        <div class="sub-item" onclick="setActive(this,'Reportería','Reporte Faltantes/Sobrantes')">
+          <span class="sub-dot"></span>Faltantes / Sobrantes
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Reportería','Reporte por Ciudad')">
+          <span class="sub-dot"></span>Reporte por Ciudad
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Reportería','Reporte por Período')">
+          <span class="sub-dot"></span>Reporte por Período
+        </div>
+        <div class="sub-item" onclick="setActive(this,'Reportería','Histórico de Inventarios')">
+          <span class="sub-dot"></span>Histórico de Inventarios
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TOMA FÍSICA ── -->
+    <div class="nav-group">
+      <div class="nav-group-label">Toma Física</div>
+
+      <div class="nav-item has-sub" data-tooltip="Toma Física"
+           onclick="toggleSub(this,'sub-toma')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+        </span>
+        <span class="nav-label">Iniciar Inventario</span>
+        <span class="nav-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <div class="sub-menu" id="sub-toma">
+        <div class="sub-item" onclick="setActive(this,'Toma Física','Quito')"><span class="sub-dot"></span>Quito</div>
+        <div class="sub-item" onclick="setActive(this,'Toma Física','Guayaquil')"><span class="sub-dot"></span>Guayaquil</div>
+        <div class="sub-item" onclick="setActive(this,'Toma Física','Ambato')"><span class="sub-dot"></span>Ambato</div>
+        <div class="sub-item" onclick="setActive(this,'Toma Física','Cuenca')"><span class="sub-dot"></span>Cuenca</div>
+        <div class="sub-item" onclick="setActive(this,'Toma Física','Manta')"><span class="sub-dot"></span>Manta</div>
+        <div class="sub-item" onclick="setActive(this,'Toma Física','Esmeraldas')"><span class="sub-dot"></span>Esmeraldas</div>
+        <div class="sub-item" onclick="setActive(this,'Toma Física','Milagro')"><span class="sub-dot"></span>Milagro</div>
+        <div class="sub-item" onclick="setActive(this,'Toma Física','Ibarra')"><span class="sub-dot"></span>Ibarra</div>
+      </div>
+    </div>
+
+    <!-- ── CONFIGURACIÓN ── -->
+    <div class="nav-group">
+      <div class="nav-group-label">Configuración</div>
+
+      <div class="nav-item" data-tooltip="Layout"
+           onclick="setActiveItem(this,'Configuración','Layout Dinámico')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </span>
+        <span class="nav-label">Layout Dinámico</span>
+      </div>
+
+      <div class="nav-item" data-tooltip="Bodegas"
+           onclick="setActiveItem(this,'Configuración','Gestión de Bodegas')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </span>
+        <span class="nav-label">Gestión de Bodegas</span>
+      </div>
+
+      <div class="nav-item" data-tooltip="Usuarios"
+           onclick="setActiveItem(this,'Configuración','Usuarios y Permisos')">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span class="nav-label">Usuarios y Permisos</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ════════════════════════════════════════════
+       CONTENIDO PRINCIPAL
+  ════════════════════════════════════════════ -->
+  <main class="main" id="main">
+    <div class="page-header">
+      <div class="page-title" id="pageTitle">Inventario Total</div>
+      <div class="page-sub"   id="pageSub">SISTEMAS DE CONTROL DE INVENTARIOS · MÓDULO ACTIVO</div>
+    </div>
+
+    <!-- Las páginas se renderizan aquí dinámicamente -->
+    <div id="pageContent">
+      <!-- Contenido inicial cargado inline (sin router) -->
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <div class="card-label">Items en Stock</div>
+          <div class="card-value accent">14,830</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="card-label">Cuadrado</div>
+          <div class="card-value ok">12,410</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="card-label">Faltante</div>
+          <div class="card-value warn">1,850</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <div class="card-label">Sobrante</div>
+          <div class="card-value cyan">570</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- Configuración del backend — ajusta la URL según tu servidor -->
+<script>
+  window.ARUPOS_API_BASE = 'http://localhost/arupos-backend';
+</script>
+
+<!-- Guard de autenticación -->
+<script type="module">
+  import { token } from './js/api.js';
+  if (!token.get()) window.location.href = '/login.html';
+
+  // Mostrar nombre de usuario en topbar
+  const p = token.payload();
+  if (p) {
+    const u = document.querySelector('.topbar-user');
+    if (u) {
+      u.textContent = (p.nombres ?? 'U').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      u.title = `${p.nombres} · ${p.rol}`;
+    }
+  }
+</script>
+
+<script src="js/sidebar.js"></script>
+<script type="module" src="js/router.js"></script>
+
+</body>
+</html>

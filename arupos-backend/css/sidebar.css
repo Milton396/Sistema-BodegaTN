@@ -1,0 +1,181 @@
+/* ============================================================
+   ARUPOS · Sistema de Control de Inventarios
+   sidebar.css — Navegación acordeón lateral
+   ============================================================ */
+
+/* ── GRUPO DE SECCIÓN ── */
+.nav-group {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.nav-group:last-child { border-bottom: none; }
+
+.nav-group-label {
+  padding: 10px 20px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity var(--transition);
+}
+.sidebar.collapsed .nav-group-label {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── ITEM DE NAVEGACIÓN ── */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 400;
+  gap: 12px;
+  transition: background var(--transition), color var(--transition);
+  border-left: 2px solid transparent;
+  user-select: none;
+  white-space: nowrap;
+}
+.nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.nav-item.active {
+  background: var(--bg-active);
+  color: var(--accent);
+  border-left-color: var(--accent);
+  box-shadow: inset 0 0 20px var(--accent-glow);
+}
+.nav-item.has-sub.open {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+/* ── ÍCONO ── */
+.nav-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── ETIQUETA ── */
+.nav-label {
+  flex: 1;
+  transition: opacity var(--transition);
+}
+.sidebar.collapsed .nav-label {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+/* ── FLECHA ACORDEÓN ── */
+.nav-arrow {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  transition: transform var(--transition), opacity var(--transition);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sidebar.collapsed .nav-arrow        { opacity: 0; }
+.nav-item.has-sub.open .nav-arrow    { transform: rotate(90deg); }
+
+/* ── BADGE ── */
+.nav-badge {
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--accent);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: opacity var(--transition);
+}
+.sidebar.collapsed .nav-badge { opacity: 0; }
+
+/* ── SUBMENÚ ── */
+.sub-menu {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .3s cubic-bezier(.4, 0, .2, 1);
+  background: rgba(0, 0, 0, .15);
+}
+.sub-menu.open                        { max-height: 600px; }
+.sidebar.collapsed .sub-menu          { max-height: 0 !important; }
+
+.sub-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 20px 8px 50px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  gap: 8px;
+  border-left: 2px solid transparent;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  white-space: nowrap;
+}
+.sub-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+.sub-item.active {
+  color: var(--accent2);
+  border-left-color: var(--accent2);
+  background: rgba(6, 182, 212, .06);
+}
+
+.sub-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  opacity: .6;
+}
+
+/* ── TOOLTIP (sidebar colapsado) ── */
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 12px;
+}
+.sidebar.collapsed .nav-item::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(var(--sidebar-collapsed) + 8px);
+  background: #1e2230;
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+  transition: opacity .15s;
+  z-index: 200;
+}
+.sidebar.collapsed .nav-item:hover::after { opacity: 1; }

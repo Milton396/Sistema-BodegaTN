@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARUPOS · Iniciar Sesión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:#0a0c0f; --bg-panel:#111318; --bg-hover:#1e2230;
+      --accent:#3b82f6;  --accent2:#06b6d4;
+      --border:rgba(255,255,255,.06); --border-active:rgba(59,130,246,.4);
+      --text-primary:#e8eaf0; --text-secondary:#8892a4; --text-muted:#4a5568;
+      --color-error:#ef4444; --radius:6px;
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family:'IBM Plex Sans',sans-serif;
+      background:var(--bg-deep); color:var(--text-primary);
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+    }
+    .login-wrap {
+      width:100%; max-width:380px; padding:20px;
+    }
+    .login-logo {
+      text-align:center; margin-bottom:32px;
+      font-family:'IBM Plex Mono',monospace; font-size:18px;
+      font-weight:600; color:var(--accent); letter-spacing:.12em;
+    }
+    .login-logo span { color:var(--text-muted); }
+    .login-logo small {
+      display:block; font-size:11px; color:var(--text-muted);
+      letter-spacing:.06em; margin-top:4px;
+    }
+    .login-card {
+      background:var(--bg-panel); border:1px solid var(--border);
+      border-radius:10px; padding:32px;
+    }
+    .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:18px; }
+    .form-label {
+      font-size:11px; font-weight:600; letter-spacing:.08em;
+      color:var(--text-muted); text-transform:uppercase;
+      font-family:'IBM Plex Mono',monospace;
+    }
+    .form-input {
+      background:var(--bg-deep); border:1px solid var(--border);
+      border-radius:var(--radius); color:var(--text-primary);
+      padding:10px 14px; font-size:13px;
+      font-family:'IBM Plex Sans',sans-serif; outline:none;
+      transition:border-color .2s;
+    }
+    .form-input:focus { border-color:var(--accent); }
+    .btn-login {
+      width:100%; padding:11px; background:var(--accent); color:#fff;
+      border:none; border-radius:var(--radius); font-size:14px;
+      font-weight:500; font-family:'IBM Plex Sans',sans-serif;
+      cursor:pointer; transition:background .2s; margin-top:4px;
+    }
+    .btn-login:hover { background:#2563eb; }
+    .btn-login:disabled { opacity:.6; cursor:not-allowed; }
+    .error-msg {
+      background:rgba(239,68,68,.1); border:1px solid var(--color-error);
+      color:var(--color-error); border-radius:var(--radius);
+      padding:10px 14px; font-size:12px; margin-bottom:16px; display:none;
+    }
+    .login-footer {
+      text-align:center; margin-top:20px;
+      font-size:11px; color:var(--text-muted);
+      font-family:'IBM Plex Mono',monospace;
+    }
+  </style>
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-logo">
+    ARUPOS <span>·</span> SCI
+    <small>SISTEMA DE CONTROL DE INVENTARIOS</small>
+  </div>
+
+  <div class="login-card">
+    <div class="error-msg" id="errMsg"></div>
+
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input class="form-input" type="email" id="inp-correo"
+             placeholder="usuario@empresa.com" autocomplete="email">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input class="form-input" type="password" id="inp-pass"
+             placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button class="btn-login" id="btn-login">Iniciar sesión</button>
+  </div>
+
+  <div class="login-footer">v1.0.0 · Ecuador UTC-5</div>
+</div>
+
+<script type="module">
+  // Apuntar al backend — ajusta si cambias el dominio
+  window.ARUPOS_API_BASE = 'http://localhost/arupos-backend';
+
+  import { api, token } from './js/api.js';
+
+  // Si ya hay token válido, redirigir
+  if (token.get()) window.location.href = '/index.html';
+
+  const btn    = document.getElementById('btn-login');
+  const errMsg = document.getElementById('errMsg');
+
+  function showError(msg) {
+    errMsg.textContent = msg;
+    errMsg.style.display = 'block';
+  }
+
+  async function doLogin() {
+    const correo = document.getElementById('inp-correo').value.trim();
+    const pass   = document.getElementById('inp-pass').value;
+
+    if (!correo || !pass) { showError('Ingresa correo y contraseña'); return; }
+
+    btn.disabled    = true;
+    btn.textContent = 'Verificando…';
+    errMsg.style.display = 'none';
+
+    try {
+      await api.login(correo, pass);
+      window.location.href = '/index.html';
+    } catch (err) {
+      showError(err.message ?? 'Error al iniciar sesión');
+      btn.disabled    = false;
+      btn.textContent = 'Iniciar sesión';
+    }
+  }
+
+  btn.addEventListener('click', doLogin);
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>

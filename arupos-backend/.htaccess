@@ -1,0 +1,14 @@
+Options -Indexes
+RewriteEngine On
+
+# Redirige todo al index.php excepto archivos reales
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Bloquear acceso directo a carpetas sensibles
+<FilesMatch "\.(php)$">
+  <If "%{REQUEST_URI} !~ m|^/index\.php|">
+    Require all denied
+  </If>
+</FilesMatch>
